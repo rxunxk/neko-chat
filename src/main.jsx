@@ -8,9 +8,11 @@ import { NextUIProvider } from "@nextui-org/react";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <NextUIProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <main className="dark text-foreground bg-background">
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </main>
     </NextUIProvider>
   </React.StrictMode>
 );
