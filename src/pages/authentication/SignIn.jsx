@@ -39,7 +39,14 @@ const SignIn = () => {
     setIsLoading(true);
     console.log(fData.SignIn);
     authUser(fData.SignIn)
-      .then((res) => console.log(res))
+      .then((res) => {
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
+        setIsAlertOpen(true);
+        setAlerMsg("Log in successful! Redirecting to home page...");
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
+      })
       .catch((err) => {
         if (err?.response?.data) {
           setAlerMsg(err?.response?.data);
