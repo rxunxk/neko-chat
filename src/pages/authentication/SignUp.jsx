@@ -18,7 +18,12 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [preview, setPreview] = useState();
   const [isPassValid, setIsPassValid] = useState(true);
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formStat: { errors },
+  } = useForm();
 
   const navigate = useNavigate();
 
@@ -27,10 +32,6 @@ const SignUp = () => {
   };
   const confirmPassToggle = () => {
     setIsConfirmPassVisible(!isConfirmPassVisible);
-  };
-
-  const logInHandler = () => {
-    navigate("/");
   };
 
   const handleSignUp = (fData) => {
@@ -97,6 +98,11 @@ const SignUp = () => {
             }
             {...register("SignUp.password", {
               required: true,
+              validate: (val) => {
+                if (watch(SignUp.password) != val) {
+                  return "Passwords do not match";
+                }
+              },
             })}
           />
           <Input
@@ -163,7 +169,9 @@ const SignUp = () => {
             color="primary"
             size="sm"
             className="self-center cursor-pointer"
-            onPress={logInHandler}
+            onPress={() => {
+              navigate("/");
+            }}
           >
             Login to your account
           </Link>
