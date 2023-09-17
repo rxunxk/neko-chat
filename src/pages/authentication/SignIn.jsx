@@ -11,9 +11,17 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+// import { EMAIL_REGEX } from "../../util/constants";
 
 const SignIn = () => {
   const [isPassVisible, setIsPassVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
 
   const passToggle = () => {
@@ -22,6 +30,11 @@ const SignIn = () => {
 
   const createNewAccHandler = () => {
     navigate("/signup");
+  };
+
+  const handleSignIn = (fData) => {
+    setIsLoading(true);
+    console.log(fData.SignIn);
   };
 
   return (
@@ -40,6 +53,25 @@ const SignIn = () => {
             label="Email"
             placeholder="Enter your email"
             variant="bordered"
+            isRequired
+            //Invalid doesnt seem to work with my code
+            // isInvalid={errors?.SignIn?.email ? true : false}
+            validationState={errors?.SignIn?.email ? "invalid" : "valid"}
+            errorMessage={errors?.SignIn?.email?.message}
+            {...register("SignIn.email", {
+              required: "Email cannot be empty",
+              pattern: {
+                value:
+                  /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,
+                message: "Please enter a valid email",
+              },
+              // validate: (value) => {
+              //   // if (EMAIL_REGEX.test(value)) {
+              //   //   return "Please enter a valid email";
+              //   // }
+              //   console.log(value);
+              // },
+            })}
           />
           <Input
             endContent={
@@ -59,6 +91,12 @@ const SignIn = () => {
             placeholder="Enter your password"
             type={isPassVisible ? "text" : "password"}
             variant="bordered"
+            isRequired
+            validationState={errors?.SignUp?.password ? "invalid" : "valid"}
+            errorMessage={errors?.SignUp?.password?.message}
+            {...register("SignIn.password", {
+              required: true,
+            })}
           />
           <div className="flex py-2 px-1 justify-between">
             <Checkbox
@@ -72,7 +110,11 @@ const SignIn = () => {
               Forgot password?
             </Link>
           </div>
-          <Button color="primary" onPress="">
+          <Button
+            color="primary"
+            onPress={handleSubmit(handleSignIn)}
+            isLoading={isLoading}
+          >
             Sign in
           </Button>
           <div className="relative">

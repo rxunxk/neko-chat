@@ -10,13 +10,17 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const SignUp = () => {
   const [isPassVisible, setIsPassVisible] = useState(false);
   const [isConfirmPassVisible, setIsConfirmPassVisible] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [preview, setPreview] = useState();
+  const [isPassValid, setIsPassValid] = useState(true);
+  const { register, handleSubmit } = useForm();
 
-  console.log(isPassVisible, isConfirmPassVisible);
+  const navigate = useNavigate();
 
   const passToggle = () => {
     setIsPassVisible(!isPassVisible);
@@ -28,9 +32,18 @@ const SignUp = () => {
   const logInHandler = () => {
     navigate("/");
   };
+
+  const handleSignUp = (fData) => {
+    if (fData.SignUp.password === fData.SignUp.confirmPassword) {
+      setIsPassValid(true);
+      setIsLoading(true);
+    } else {
+      setIsPassValid(false);
+    }
+  };
   return (
     <div className=" bg-blue-200 w-screen h-screen flex justify-center items-center">
-      <Card className="w-[600px] max-w-[600px]">
+      <Card className="w-[600px] max-w-[600px] max-h-[90vh]">
         <CardHeader className="flex flex-col w-full items-start">
           <p className="font-bold text-[1.3rem]">Create an account</p>
           <p className="text-gray-400">
@@ -44,12 +57,20 @@ const SignUp = () => {
             label="Name"
             placeholder="Enter your Name"
             variant="bordered"
+            isRequired
+            {...register("SignUp.name", {
+              required: true,
+            })}
           />
           <Input
             autoFocus
             label="Email"
             placeholder="Enter your email"
             variant="bordered"
+            isRequired
+            {...register("SignUp.email", {
+              required: true,
+            })}
           />
           <Input
             endContent={
@@ -66,9 +87,17 @@ const SignUp = () => {
               )
             }
             label="Password"
+            isRequired
             placeholder="Enter your password"
             type={isPassVisible ? "text" : "password"}
             variant="bordered"
+            validationState={isPassValid ? "valid" : "invalid"}
+            errorMessage={
+              isPassValid ? "" : "Passwords do not match. Please try again."
+            }
+            {...register("SignUp.password", {
+              required: true,
+            })}
           />
           <Input
             endContent={
@@ -87,10 +116,41 @@ const SignUp = () => {
             label="Password"
             placeholder="Confirm password"
             type={isConfirmPassVisible ? "text" : "password"}
+            isRequired
             variant="bordered"
+            validationState={isPassValid ? "valid" : "invalid"}
+            errorMessage={
+              isPassValid ? "" : "Passwords do not match. Please try again."
+            }
+            {...register("SignUp.confirmPassword", {
+              required: true,
+            })}
+          />
+          <Input
+            autoFocus
+            label="Profile Picture"
+            placeholder="Upload a picture"
+            variant="bordered"
+            type="file"
+            accept="image/png, image/jpeg"
+            {...register("SignUp.pic", {
+              onChange: (e) => {
+                setPreview(URL.createObjectURL(e.target.files[0]));
+              },
+            })}
           />
 
-          <Button color="primary" onPress="">
+          <img
+            src={preview}
+            className=" border border-[#333] mt-4 rounded-[10px]"
+          />
+
+          <Button
+            color="primary"
+            onPress={handleSubmit(handleSignUp)}
+            isLoading={isLoading}
+            className="shrink-0"
+          >
             Sign Up
           </Button>
           <div className="relative">
