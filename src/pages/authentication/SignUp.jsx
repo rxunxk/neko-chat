@@ -17,12 +17,11 @@ const SignUp = () => {
   const [isConfirmPassVisible, setIsConfirmPassVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [preview, setPreview] = useState();
-  const [isPassValid, setIsPassValid] = useState(true);
   const {
     register,
     handleSubmit,
     watch,
-    formStat: { errors },
+    formState: { errors },
   } = useForm();
 
   const navigate = useNavigate();
@@ -36,12 +35,12 @@ const SignUp = () => {
 
   const handleSignUp = (fData) => {
     if (fData.SignUp.password === fData.SignUp.confirmPassword) {
-      setIsPassValid(true);
       setIsLoading(true);
     } else {
-      setIsPassValid(false);
+      console.log("password invalid");
     }
   };
+  console.log(watch(SignUp.confirmPassword));
   return (
     <div className=" bg-blue-200 w-screen h-screen flex justify-center items-center">
       <Card className="w-[600px] max-w-[600px] max-h-[90vh]">
@@ -59,8 +58,10 @@ const SignUp = () => {
             placeholder="Enter your Name"
             variant="bordered"
             isRequired
+            errorMessage={errors?.SignUp?.name?.message}
+            validationState={errors?.SignUp?.name ? "invalid" : "valid"}
             {...register("SignUp.name", {
-              required: true,
+              required: "Name cannot be empty. Please try again",
             })}
           />
           <Input
@@ -69,8 +70,15 @@ const SignUp = () => {
             placeholder="Enter your email"
             variant="bordered"
             isRequired
+            errorMessage={errors?.SignUp?.email?.message}
+            validationState={errors?.SignUp?.email ? "invalid" : "valid"}
             {...register("SignUp.email", {
-              required: true,
+              required: "Email cannot be empty. Please try again",
+              pattern: {
+                value:
+                  /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,
+                message: "Please enter a valid email address",
+              },
             })}
           />
           <Input
@@ -92,16 +100,15 @@ const SignUp = () => {
             placeholder="Enter your password"
             type={isPassVisible ? "text" : "password"}
             variant="bordered"
-            validationState={isPassValid ? "valid" : "invalid"}
-            errorMessage={
-              isPassValid ? "" : "Passwords do not match. Please try again."
-            }
+            errorMessage={errors?.SignUp?.password?.message}
+            validationState={errors?.SignUp?.password ? "invalid" : "valid"}
             {...register("SignUp.password", {
-              required: true,
-              validate: (val) => {
-                if (watch(SignUp.password) != val) {
-                  return "Passwords do not match";
-                }
+              required: "Password cannot be empty. Please try again",
+              pattern: {
+                value:
+                  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message:
+                  "Password must contain an Alphabet, a number & a digt. please try again.",
               },
             })}
           />
@@ -119,17 +126,22 @@ const SignUp = () => {
                 />
               )
             }
-            label="Password"
+            label="Confirm Password"
             placeholder="Confirm password"
             type={isConfirmPassVisible ? "text" : "password"}
             isRequired
             variant="bordered"
-            validationState={isPassValid ? "valid" : "invalid"}
-            errorMessage={
-              isPassValid ? "" : "Passwords do not match. Please try again."
+            errorMessage={errors?.SignUp?.confirmPassword?.message}
+            validationState={
+              errors?.SignUp?.confirmPassword ? "invalid" : "valid"
             }
             {...register("SignUp.confirmPassword", {
-              required: true,
+              required: "Confirm password field cannot be empty.",
+              validate: (val) => {
+                if (watch("SignUp.password") !== val) {
+                  return "Passwords do not match. Please try again";
+                }
+              },
             })}
           />
           <Input

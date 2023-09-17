@@ -98,7 +98,7 @@ const SignIn = () => {
                 pattern: {
                   value:
                     /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,
-                  message: "Please enter a valid email",
+                  message: "Please enter a valid email address",
                 },
               })}
             />
@@ -121,10 +121,10 @@ const SignIn = () => {
               type={isPassVisible ? "text" : "password"}
               variant="bordered"
               isRequired
-              validationState={errors?.SignUp?.password ? "invalid" : "valid"}
-              errorMessage={errors?.SignUp?.password?.message}
+              validationState={errors?.SignIn?.password ? "invalid" : "valid"}
+              errorMessage={errors?.SignIn?.password?.message}
               {...register("SignIn.password", {
-                required: true,
+                required: "Password cannot be empty. Please try again",
               })}
             />
             <div className="flex py-2 px-1 justify-between">
