@@ -15,9 +15,10 @@ import {
 } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { authUser } from "../../api/auth";
+import { getCurrentUser } from "../../util/utilFunctions";
 
 const SignIn = () => {
   const [isPassVisible, setIsPassVisible] = useState(false);
@@ -30,6 +31,14 @@ const SignIn = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      // dispatch(setCurrentUser(currentUser));
+      navigate("/Home");
+    }
+  }, []);
 
   const passToggle = () => {
     setIsPassVisible(!isPassVisible);
