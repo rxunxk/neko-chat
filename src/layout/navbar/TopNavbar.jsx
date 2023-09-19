@@ -12,7 +12,6 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-
 const TopNavBar = () => {
   // const navigate = useNavigate();
 
@@ -20,8 +19,13 @@ const TopNavBar = () => {
     <Navbar isBordered className="h-[7vh] w-full">
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
-          😸
-          <p className="font-bold text-inherit">Neko Chat</p>
+          <div className="text-[1.5rem] flex gap-2 items-center">
+            <img
+              src="https://res.cloudinary.com/dhqzb4ngs/image/upload/v1695116226/icon-cute_fikhap.png"
+              className="h-[30px] w-[30px]"
+            />
+            <p className="font-bold text-inherit">Neko Chat</p>
+          </div>
         </NavbarBrand>
       </NavbarContent>
 
