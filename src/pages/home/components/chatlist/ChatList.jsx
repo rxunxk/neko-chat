@@ -18,8 +18,7 @@ import { setChatList } from "../../../../redux/slices/chatList";
 const ChatList = () => {
   const dispatch = useDispatch();
   const chatList = useSelector((state) => state.chatList);
-
-  console.log(chatList);
+  const curChat = useSelector((state) => state.curChat);
 
   const { isOpen: isNewChatOpen, onOpenChange: setIsNewChatOpen } =
     useDisclosure();
@@ -67,7 +66,9 @@ const ChatList = () => {
           })}
         </div>
         <div className="bg-[#333] h-full w-full max-[700px]:hidden">
-          Mini Chat Component
+          {Object.keys(curChat).length === 0
+            ? "Click on of the chats on the left to open a chat"
+            : `Chatname: ${curChat.chatName} User:${curChat.users[1].name}`}
         </div>
       </div>
     </>

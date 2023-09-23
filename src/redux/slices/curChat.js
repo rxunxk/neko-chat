@@ -4,7 +4,9 @@ const curChat = createSlice({
   name: "curChat",
   initialState: {},
   reducers: {
-    setCurChat: (state, action) => action.payload,
+    setCurChat: (state, action) => {
+      return action.payload;
+    },
   },
 });
 

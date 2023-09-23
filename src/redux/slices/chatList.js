@@ -5,8 +5,12 @@ const chatList = createSlice({
   initialState: [],
   reducers: {
     setChatList: (state, action) => action.payload,
+    pushIntoChatList: (state, action) => {
+      state.push(action.payload);
+      return state;
+    },
   },
 });
 
-export const { setChatList } = chatList.actions;
+export const { setChatList, pushIntoChatList } = chatList.actions;
 export default chatList.reducer;

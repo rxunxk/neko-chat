@@ -3,26 +3,28 @@ import { User } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurChat } from "../redux/slices/curChat";
 import { openChat } from "../util/chatApi";
+import { pushIntoChatList } from "../redux/slices/chatList";
 
 const UserBar = ({ user, closeModel }) => {
   const dispatch = useDispatch();
   const chatList = useSelector((state) => state.chatList);
-
-  const callOpenChat = (data) => {
-    openChat(data).then((res) => console.log(res.data));
-  };
 
   return (
     <>
       <div
         className="cursor-pointer hover:bg-[#19191c] p-2 rounded-[8px]"
         onClick={() => {
-          console.log(user.name);
           if (chatList.some((chat) => chat.users[1].name === user.name)) {
-            dispatch(setCurChat(user));
+            //for existing chat
+            openChat({ userId: user._id }).then((res) => {
+              dispatch(setCurChat(res.data));
+            });
           } else {
-            callOpenChat({ userId: user._id });
-            dispatch(setCurChat(user));
+            openChat({ userId: user._id }).then((res) => {
+              //for new chat
+              dispatch(pushIntoChatList(res.data));
+              dispatch(setCurChat(res.data));
+            });
           }
           closeModel(false);
         }}

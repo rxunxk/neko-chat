@@ -5,11 +5,24 @@ import {
   //   Button,
 } from "@nextui-org/react";
 import PropTypes from "prop-types";
+import {
+  // useSelector,
+  useDispatch,
+} from "react-redux";
+import { setCurChat } from "../../../../redux/slices/curChat";
 
 const ChatBar = ({ chat }) => {
+  // const curChat = useSelector((state) => state.curChat);
+  const dispatch = useDispatch();
+
   return (
-    <Card className="flex max-w-full m-2 rounded-[8px]">
-      <CardHeader className="justify-between">
+    <Card className="flex max-w-full m-2 rounded-[8px] cursor-pointer">
+      <CardHeader
+        className="justify-between"
+        onClick={() => {
+          dispatch(setCurChat(chat));
+        }}
+      >
         <div className="flex gap-5">
           <Avatar
             isBordered
