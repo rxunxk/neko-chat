@@ -14,21 +14,19 @@ import {
 import ProfileModal from "../../modals/ProfileModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../../util/utilFunctions";
 
 const TopNavBar = () => {
   const navigate = useNavigate();
   const [isProfileModelOpen, setIsProfileModelOpen] = useState(false);
+  const user = getCurrentUser();
 
   return (
     <>
       <ProfileModal
         isOpen={isProfileModelOpen}
         setIsOpen={setIsProfileModelOpen}
-        user={{
-          name: "Raunak Pandey",
-          pic: "https://res.cloudinary.com/dhqzb4ngs/image/upload/v1695116226/icon-cute_fikhap.png",
-          email: "raunak@mail.com",
-        }}
+        user={user}
       />
       <Navbar isBordered className="h-[7vh] w-full">
         <NavbarContent justify="start">
@@ -52,11 +50,11 @@ const TopNavBar = () => {
               <Avatar
                 isBordered
                 as="button"
-                className="transition-transform"
+                className="transition-transform h-[40px] w-[40px]"
                 color="secondary"
                 name="Jason Hughes"
                 size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src={user.pic}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">

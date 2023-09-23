@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Modal,
   ModalContent,
@@ -15,12 +14,14 @@ import UserSkeleton from "../skeletons/UsersSkeleton";
 import { useEffect, useState } from "react";
 import { getAllUsers, searchUsers } from "../util/userApi";
 import UserBar from "../components/UserBar";
-// import { getCurrentUser } from "../util/utilFunctions";
+import PropTypes from "prop-types";
+import { getCurrentUser } from "../util/utilFunctions";
 
 let users;
 const NewChat = ({ setIsOpen, isOpen }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [usersList, setUsersList] = useState([]);
+  const currentUser = getCurrentUser();
 
   const {
     register,
@@ -28,12 +29,16 @@ const NewChat = ({ setIsOpen, isOpen }) => {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
+  const callAllUsers = () => {
     getAllUsers().then((res) => {
-      setUsersList(res.data);
+      let temp = res.data.filter((user) => user.name !== currentUser.name);
+      setUsersList(temp);
       setIsLoading(false);
     });
+  };
 
+  useEffect(() => {
+    callAllUsers();
     return () => {
       setUsersList([]);
       setIsLoading(true);
@@ -41,7 +46,6 @@ const NewChat = ({ setIsOpen, isOpen }) => {
   }, []);
 
   const onSubmit = (fData) => {
-    console.log(fData.searchUser);
     searchUsers(fData.searchUser).then((res) => {
       if (res.data.length > 0) {
         setUsersList(res.data);
@@ -50,7 +54,6 @@ const NewChat = ({ setIsOpen, isOpen }) => {
         setIsLoading(false);
         setUsersList([]);
       }
-      console.log(res.data);
     });
     setIsLoading(true);
   };
@@ -62,7 +65,7 @@ const NewChat = ({ setIsOpen, isOpen }) => {
       users = <h1>No User Found!</h1>;
     } else {
       users = usersList.map((user, i) => {
-        return <UserBar user={user} key={i} />;
+        return <UserBar user={user} key={i} closeModel={setIsOpen} />;
       });
     }
   }
@@ -83,6 +86,7 @@ const NewChat = ({ setIsOpen, isOpen }) => {
               <ModalBody>
                 <div className="flex flex-row gap-2 items-center">
                   <Input
+                    isClearable
                     type="text"
                     variant="flat"
                     label="search"
@@ -90,6 +94,10 @@ const NewChat = ({ setIsOpen, isOpen }) => {
                     className="flex-1"
                     errorMessage={errors?.searchUser?.message}
                     validationState={errors?.searchUser ? "invalid" : "valid"}
+                    onClear={() => {
+                      setIsLoading(true);
+                      callAllUsers();
+                    }}
                     {...register("searchUser", {
                       required: "user name cannot be empty",
                     })}
@@ -102,7 +110,9 @@ const NewChat = ({ setIsOpen, isOpen }) => {
                     <Search />
                   </Button>
                 </div>
-                {users}
+                <div className="flex flex-col gap-2 max-h-[40vh] overflow-auto">
+                  {users}
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
@@ -118,3 +128,8 @@ const NewChat = ({ setIsOpen, isOpen }) => {
 };
 
 export default NewChat;
+
+NewChat.propTypes = {
+  setIsOpen: PropTypes.any,
+  isOpen: PropTypes.any,
+};
