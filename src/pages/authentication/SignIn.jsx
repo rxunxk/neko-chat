@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { authUser } from "../../api/auth";
 import { getCurrentUser } from "../../util/utilFunctions";
+import { DARK } from "../../util/constants";
 
 const SignIn = () => {
   const [isPassVisible, setIsPassVisible] = useState(false);
@@ -71,7 +72,7 @@ const SignIn = () => {
         backdrop="blur"
         isOpen={isAlertOpen}
         onOpenChange={setIsAlertOpen}
-        className="dark text-foreground bg-background"
+        className={`${DARK}`}
       >
         <ModalContent>
           {(onClose) => (
