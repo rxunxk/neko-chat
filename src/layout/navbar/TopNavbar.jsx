@@ -28,6 +28,7 @@ const TopNavBar = () => {
         setIsOpen={setIsProfileModelOpen}
         user={user}
       />
+
       <Navbar isBordered className="h-[7vh] w-full">
         <NavbarContent justify="start">
           <NavbarBrand className="mr-4">

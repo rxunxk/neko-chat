@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { getChats } from "../../../../util/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setChatList } from "../../../../redux/slices/chatList";
+import NewGroupChat from "../../../../modals/NewGroupChat";
 
 const ChatList = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const ChatList = () => {
   const curChat = useSelector((state) => state.curChat);
 
   const { isOpen: isNewChatOpen, onOpenChange: setIsNewChatOpen } =
+    useDisclosure();
+  const { isOpen: isNewGroupChatOpen, onOpenChange: setIsNewGroupChatOpen } =
     useDisclosure();
 
   const callChatsApi = () => {
@@ -37,6 +40,11 @@ const ChatList = () => {
   return (
     <>
       <NewChat isOpen={isNewChatOpen} setIsOpen={setIsNewChatOpen} />
+      <NewGroupChat
+        isOpen={isNewGroupChatOpen}
+        setIsOpen={setIsNewGroupChatOpen}
+      />
+
       <div className="bg-[#18181b] flex gap-2 h-[93vh] w-full ">
         <div className="bg-[#333] h-[full] shrink-0 max-w-full w-[400px] max-[700px]:w-full overflow-auto ">
           <Card className="p-2 px-4 rounded-[8px] flex flex-row justify-between items-center">
@@ -56,7 +64,14 @@ const ChatList = () => {
                 >
                   New Chat
                 </DropdownItem>
-                <DropdownItem key="copy">New Group Chat</DropdownItem>
+                <DropdownItem
+                  key="copy"
+                  onClick={() => {
+                    setIsNewGroupChatOpen();
+                  }}
+                >
+                  New Group Chat
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </Card>
