@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-  Card,
   useDisclosure,
 } from "@nextui-org/react";
 import { Plus } from "lucide-react";
@@ -15,11 +14,11 @@ import { getChats } from "../../../../util/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setChatList } from "../../../../redux/slices/chatList";
 import NewGroupChat from "../../../../modals/NewGroupChat";
+import MiniChatCompenent from "./MiniChatCompenent";
 
 const ChatList = () => {
   const dispatch = useDispatch();
   const chatList = useSelector((state) => state.chatList);
-  const curChat = useSelector((state) => state.curChat);
 
   const { isOpen: isNewChatOpen, onOpenChange: setIsNewChatOpen } =
     useDisclosure();
@@ -46,8 +45,8 @@ const ChatList = () => {
       />
 
       <div className="bg-[#18181b] flex gap-2 h-[93vh] w-full ">
-        <div className="bg-[#333] h-[full] shrink-0 max-w-full w-[400px] max-[700px]:w-full overflow-auto ">
-          <Card className="p-2 px-4 rounded-[8px] flex flex-row justify-between items-center">
+        <div className="bg-[#333] h-[full] shrink-0 max-w-full w-[350px] max-[700px]:w-full overflow-auto ">
+          <div className="p-2 px-4 bg-[#151515] flex flex-row justify-between items-center">
             <p className="font-bold text-[1.2rem]">My Chats</p>
             <Dropdown className="dark text-foreground bg-[#18181b]">
               <DropdownTrigger>
@@ -74,17 +73,13 @@ const ChatList = () => {
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-          </Card>
+          </div>
 
           {chatList?.map((chat, i) => {
             return <ChatBar key={i} chat={chat} />;
           })}
         </div>
-        <div className="bg-[#333] h-full w-full max-[700px]:hidden">
-          {Object.keys(curChat).length === 0
-            ? "Click on of the chats on the left to open a chat"
-            : `Chatname: ${curChat.chatName} User:${curChat.users[1].name}`}
-        </div>
+        <MiniChatCompenent />
       </div>
     </>
   );

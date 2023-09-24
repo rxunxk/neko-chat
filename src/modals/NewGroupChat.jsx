@@ -18,6 +18,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UserSkeleton from "../skeletons/UsersSkeleton";
 import UserBar from "../components/UserBar";
+import { createGC } from "../util/chatApi";
+import {
+  // useSelector,
+  useDispatch,
+} from "react-redux";
+import { pushIntoChatList } from "../redux/slices/chatList";
 
 let users;
 const NewGroupChat = ({ setIsOpen, isOpen }) => {
@@ -25,8 +31,9 @@ const NewGroupChat = ({ setIsOpen, isOpen }) => {
   const [usersList, setUsersList] = useState([]);
   const currentUser = getCurrentUser();
   const [userChips, setUserChips] = useState([]);
-
-  console.log("User chips: ", userChips);
+  const [isBtnLoading, setIsBtnLoading] = useState(false);
+  const dispatch = useDispatch();
+  // const chatList = useSelector((state) => state.chatList);
 
   const {
     register,
@@ -47,6 +54,8 @@ const NewGroupChat = ({ setIsOpen, isOpen }) => {
     callAllUsers();
     return () => {
       setUsersList([]);
+      setUserChips([]);
+      setIsBtnLoading(false);
       setIsLoading(true);
     };
   }, []);
@@ -67,7 +76,17 @@ const NewGroupChat = ({ setIsOpen, isOpen }) => {
   };
 
   const onSubmit = (fData) => {
-    if (userChips.length > 0) console.log(fData);
+    if (userChips.length) {
+      setIsBtnLoading(true);
+      const newUsers = JSON.stringify(userChips);
+      createGC({ name: fData?.NewGC?.groupName, users: newUsers })
+        .then((res) => {
+          dispatch(pushIntoChatList(res.data));
+          setIsBtnLoading(false);
+          setIsOpen();
+        })
+        .catch((err) => console.log(err.message));
+    }
   };
 
   if (isLoading) {
@@ -170,7 +189,11 @@ const NewGroupChat = ({ setIsOpen, isOpen }) => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={handleSubmit(onSubmit)}>
+                <Button
+                  color="primary"
+                  onPress={handleSubmit(onSubmit)}
+                  isLoading={isBtnLoading}
+                >
                   Create
                 </Button>
                 <Button color="danger" variant="light" onPress={onClose}>

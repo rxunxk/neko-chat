@@ -8,3 +8,7 @@ export const getChats = async () => {
 export const openChat = async (data) => {
   return await axios.post(`${BASE_URL}/api/chats/`, data, AXIOS_CONFIG);
 };
+
+export const createGC = async (data) => {
+  return await axios.post(`${BASE_URL}/api/chats/gc`, data, AXIOS_CONFIG);
+};

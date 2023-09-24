@@ -13,8 +13,9 @@ const UserBar = ({ user, closeModel, isGC, setUserChips, userChips }) => {
   if (isGC) {
     clickHandler = () => {
       if (userChips?.some((uc) => uc.name === user.name)) {
-        console.log("user exsiting already");
+        //existing user
       } else {
+        //new user
         console.log("user is new");
         setUserChips((prevState) => [...prevState, user]);
       }
