@@ -5,7 +5,14 @@ import { setCurChat } from "../redux/slices/curChat";
 import { openChat } from "../util/chatApi";
 import { pushIntoChatList } from "../redux/slices/chatList";
 
-const UserBar = ({ user, closeModel, isGC, setUserChips, userChips }) => {
+const UserBar = ({
+  user,
+  closeModel,
+  isGC,
+  setUserChips,
+  userChips,
+  noOnClick,
+}) => {
   const dispatch = useDispatch();
   const chatList = useSelector((state) => state.chatList);
 
@@ -16,7 +23,6 @@ const UserBar = ({ user, closeModel, isGC, setUserChips, userChips }) => {
         //existing user
       } else {
         //new user
-        console.log("user is new");
         setUserChips((prevState) => [...prevState, user]);
       }
     };
@@ -42,7 +48,18 @@ const UserBar = ({ user, closeModel, isGC, setUserChips, userChips }) => {
     <>
       <div
         className="cursor-pointer hover:bg-[#19191c] p-2 rounded-[8px]"
-        onClick={clickHandler}
+        onClick={
+          noOnClick
+            ? () => {
+                if (userChips?.some((uc) => uc.name === user.name)) {
+                  //existing user
+                } else {
+                  //new user
+                  setUserChips((prevState) => [...prevState, user]);
+                }
+              }
+            : clickHandler
+        }
       >
         <User
           name={user?.name}
@@ -65,4 +82,5 @@ UserBar.propTypes = {
   isGC: PropTypes.any,
   setUserChips: PropTypes.any,
   userChips: PropTypes.any,
+  noOnClick: PropTypes.any,
 };
