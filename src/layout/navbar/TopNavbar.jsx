@@ -15,9 +15,13 @@ import ProfileModal from "../../modals/ProfileModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../util/utilFunctions";
+import { useDispatch } from "react-redux";
+import { setCurChat } from "../../redux/slices/curChat";
+import { setChatList } from "../../redux/slices/chatList";
 
 const TopNavBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isProfileModelOpen, setIsProfileModelOpen] = useState(false);
   const user = getCurrentUser();
 
@@ -73,6 +77,8 @@ const TopNavBar = () => {
                 color="danger"
                 onClick={() => {
                   localStorage.removeItem("currentUser");
+                  dispatch(setCurChat({}));
+                  dispatch(setChatList([]));
                   navigate("/");
                 }}
               >

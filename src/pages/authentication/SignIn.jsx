@@ -47,7 +47,6 @@ const SignIn = () => {
 
   const handleSignIn = (fData) => {
     setIsLoading(true);
-    console.log(fData.SignIn);
     authUser(fData.SignIn)
       .then((res) => {
         localStorage.setItem("currentUser", JSON.stringify(res.data));

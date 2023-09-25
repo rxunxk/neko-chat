@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL, AXIOS_CONFIG } from "../config/axios";
 
 export const getChats = async () => {
-  return await axios.get(`${BASE_URL}/api/chats/`, AXIOS_CONFIG);
+  return await axios.get(`${BASE_URL}/api/chats/users`, AXIOS_CONFIG);
 };
 
 export const openChat = async (data) => {
