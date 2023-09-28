@@ -79,7 +79,7 @@ const TopNavBar = () => {
                   localStorage.removeItem("currentUser");
                   dispatch(setCurChat({}));
                   dispatch(setChatList([]));
-                  navigate("/");
+                  navigate("/signin");
                 }}
               >
                 Log Out

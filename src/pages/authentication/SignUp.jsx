@@ -262,7 +262,7 @@ const SignUp = () => {
               size="sm"
               className="self-center cursor-pointer"
               onPress={() => {
-                navigate("/");
+                navigate("/signin");
               }}
             >
               Login to your account
