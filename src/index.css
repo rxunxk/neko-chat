@@ -11,3 +11,11 @@
     display: none;
   }
 }
+
+.nomarginTop {
+  margin-top: 1px;
+}
+
+.nomarginBottom {
+  margin-bottom: 1px;
+}

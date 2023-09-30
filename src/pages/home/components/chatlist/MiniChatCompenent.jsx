@@ -14,8 +14,11 @@ import { useSelector } from "react-redux";
 import { MoreHorizontal } from "lucide-react";
 import ProfileModal from "../../../../modals/ProfileModal";
 import GroupInfo from "../../../../modals/GroupInfo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../../../util/utilFunctions";
+import { getAllMessages, sendMessage } from "../../../../util/messageApi";
+import ScrollableFeed from "react-scrollable-feed";
+import MessageBar from "../message bar/messageBar";
 
 const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   const curChat = useSelector((state) => state.curChat);
@@ -26,14 +29,42 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
-  const sendMessage = () => {
+  const callGetAllMessages = () => {
+    if (Object.keys(curChat).length) {
+      getAllMessages(curChat?._id)
+        .then((res) => {
+          setMessageList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+
+  useEffect(() => {
+    callGetAllMessages();
+  }, [curChat]);
+
+  const sendMessageHandler = () => {
     //Empty the message input
+    let temp = message;
     setMessage("");
 
     //Append the message to the messages list
 
     //Api Call
-
+    sendMessage({
+      content: message,
+      chatId: curChat._id,
+    })
+      .then((res) => {
+        setMessageList((prevState) => [...prevState, res.data]);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        setMessage(temp);
+        console.log(err.message);
+      });
     //Remove the appended message if response failed
 
     console.log(message);
@@ -121,12 +152,29 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
               </DropdownMenu>
             </Dropdown>
           </div>
-          <div className=" flex-grow">Chats</div>
+          <div className="flex-grow overflow-auto">
+            {Object.keys(messageList).length ? (
+              <ScrollableFeed className="p-2">
+                {messageList?.map((message, i) => {
+                  return (
+                    <MessageBar
+                      key={i}
+                      message={message}
+                      messageList={messageList}
+                      msgIndex={i}
+                    />
+                  );
+                })}
+              </ScrollableFeed>
+            ) : (
+              <h1>No Chats to display</h1>
+            )}
+          </div>
           <div className="self-end w-full flex gap-2 p-2">
             <Input
               onKeyDown={(e) => {
                 if (e.key === "Enter" && message) {
-                  sendMessage(e.target.value);
+                  sendMessageHandler();
                 }
               }}
               radius="full"
@@ -140,7 +188,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
               isIconOnly
               onPress={() => {
                 if (message !== "") {
-                  sendMessage();
+                  sendMessageHandler();
                 }
               }}
             >
