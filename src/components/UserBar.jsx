@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurChat } from "../redux/slices/curChat";
 import { openChat } from "../util/chatApi";
 import { pushIntoChatList } from "../redux/slices/chatList";
+import { getCurrentUser } from "../util/utilFunctions";
 
 const UserBar = ({
   user,
@@ -28,7 +29,13 @@ const UserBar = ({
     };
   } else {
     clickHandler = () => {
-      if (chatList.some((chat) => chat.users[1].name === user.name)) {
+      if (
+        chatList.some((chat) =>
+          chat?.users[0].name === getCurrentUser().name
+            ? chat?.users[1].name
+            : chat?.users[0].name === user.name
+        )
+      ) {
         //for existing chat
         openChat({ userId: user._id }).then((res) => {
           dispatch(setCurChat(res.data));

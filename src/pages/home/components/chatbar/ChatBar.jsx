@@ -10,7 +10,7 @@ import {
   useDispatch,
 } from "react-redux";
 import { setCurChat } from "../../../../redux/slices/curChat";
-
+import { getCurrentUser } from "../../../../util/utilFunctions";
 const ChatBar = ({ chat, setHideChat }) => {
   // const curChat = useSelector((state) => state.curChat);
   const dispatch = useDispatch();
@@ -31,14 +31,18 @@ const ChatBar = ({ chat, setHideChat }) => {
             size="md"
             src={`${
               chat?.chatName === "sender"
-                ? chat?.users[1]?.pic
+                ? chat?.users[0].name === getCurrentUser().name
+                  ? chat?.users[1].pic
+                  : chat?.users[0].pic
                 : "https://res.cloudinary.com/dhqzb4ngs/image/upload/v1695116226/icon-cute_fikhap.png"
             }`}
           />
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="text-small font-semibold leading-none text-default-600">
               {chat?.chatName === "sender"
-                ? chat?.users[1]?.name
+                ? chat?.users[0].name === getCurrentUser().name
+                  ? chat?.users[1].name
+                  : chat?.users[0].name
                 : chat?.chatName}
             </h4>
             <h5 className="text-small tracking-tight text-default-400">
