@@ -5,3 +5,9 @@
 * {
   font-family: "Inter", sans-serif;
 }
+
+.hide {
+  @media (max-width: 700px) {
+    display: none;
+  }
+}

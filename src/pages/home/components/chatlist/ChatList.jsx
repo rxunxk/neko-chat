@@ -49,8 +49,11 @@ const ChatList = () => {
 
       <div className="bg-[#18181b] flex gap-2 h-[93vh] w-full">
         <div
-          className={`bg-[#333] h-full shrink-0 w-[370px] overflow-y-scroll max-[700px]:w-full max-[700px]:${
-            hideChat ? "" : "hidden"
+          // className={`bg-[#333] h-full shrink-0 w-[370px] overflow-y-scroll max-[700px]:w-full max-[700px]:${
+          //   hideChat ? "" : "hidden"
+          // }`}
+          className={`bg-[#333] h-full shrink-0 w-[370px] overflow-y-scroll max-[700px]:w-full ${
+            hideChat ? "" : "hide"
           }`}
         >
           <div className="p-2 px-4 bg-[#151515] flex flex-row justify-between items-center">

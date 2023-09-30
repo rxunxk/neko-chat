@@ -23,9 +23,12 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
 
   return (
     <div
-      className={`bg-[#333] h-full shrink-0 flex-1 max-[700px]:w-full max-[700px]:${
-        hideChat ? "hidden" : ""
-      } `}
+      // className={`bg-[#333] h-full shrink-0 flex-1 max-[700px]:w-full max-[700px]:${
+      //   hideChat ? "hidden" : ""
+      // }`}
+      className={`bg-[#333] h-full shrink-0 flex-1 max-[700px]:w-full ${
+        hideChat ? "hide" : ""
+      }`}
     >
       {Object.keys(curChat).length ? (
         <div>
