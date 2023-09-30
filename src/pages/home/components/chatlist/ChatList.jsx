@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 import NewChat from "../../../../modals/NewChat";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getChats } from "../../../../util/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setChatList } from "../../../../redux/slices/chatList";
@@ -19,6 +19,7 @@ import MiniChatCompenent from "./MiniChatCompenent";
 const ChatList = () => {
   const dispatch = useDispatch();
   const chatList = useSelector((state) => state.chatList);
+  const [hideChat, setHideChat] = useState(true);
 
   const { isOpen: isNewChatOpen, onOpenChange: setIsNewChatOpen } =
     useDisclosure();
@@ -28,11 +29,13 @@ const ChatList = () => {
   const callChatsApi = () => {
     getChats().then((res) => {
       dispatch(setChatList(res.data));
-      console.log(res.data);
     });
   };
 
   useEffect(() => {
+    if (window.innerWidth < 700) {
+      setHideChat(true);
+    }
     callChatsApi();
   }, []);
 
@@ -44,8 +47,12 @@ const ChatList = () => {
         setIsOpen={setIsNewGroupChatOpen}
       />
 
-      <div className="bg-[#18181b] flex gap-2 h-[93vh] w-full ">
-        <div className="bg-[#333] h-[full] shrink-0 max-w-full w-[350px] max-[700px]:w-full overflow-auto ">
+      <div className="bg-[#18181b] flex gap-2 h-[93vh] w-full">
+        <div
+          className={`bg-[#333] h-full shrink-0 w-[370px] overflow-y-scroll max-[700px]:w-full max-[700px]:${
+            hideChat ? "" : "hidden"
+          }`}
+        >
           <div className="p-2 px-4 bg-[#151515] flex flex-row justify-between items-center">
             <p className="font-bold text-[1.2rem]">My Chats</p>
             <Dropdown className="dark text-foreground bg-[#18181b]">
@@ -76,10 +83,10 @@ const ChatList = () => {
           </div>
 
           {chatList?.map((chat, i) => {
-            return <ChatBar key={i} chat={chat} />;
+            return <ChatBar key={i} chat={chat} setHideChat={setHideChat} />;
           })}
         </div>
-        <MiniChatCompenent />
+        <MiniChatCompenent hideChat={hideChat} setHideChat={setHideChat} />
       </div>
     </>
   );

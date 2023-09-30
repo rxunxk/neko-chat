@@ -11,7 +11,7 @@ import {
 } from "react-redux";
 import { setCurChat } from "../../../../redux/slices/curChat";
 
-const ChatBar = ({ chat }) => {
+const ChatBar = ({ chat, setHideChat }) => {
   // const curChat = useSelector((state) => state.curChat);
   const dispatch = useDispatch();
 
@@ -20,6 +20,7 @@ const ChatBar = ({ chat }) => {
       <CardHeader
         className="justify-between"
         onClick={() => {
+          setHideChat(false);
           dispatch(setCurChat(chat));
         }}
       >
@@ -54,4 +55,5 @@ export default ChatBar;
 
 ChatBar.propTypes = {
   chat: PropTypes.any,
+  setHideChat: PropTypes.any,
 };

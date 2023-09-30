@@ -3,7 +3,6 @@ import SignIn from "../pages/authentication/SignIn";
 import SignUp from "../pages/authentication/SignUp";
 import Home from "../pages/home/Home";
 import Profile from "../pages/profile/Profile";
-import Chat from "../pages/home/components/chat/Chat";
 import { PrivateRoute } from "./PrivateRoute";
 
 const Navigation = () => {
@@ -14,7 +13,6 @@ const Navigation = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/home" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/chat" element={<Chat />} />
     </Routes>
   );
 };

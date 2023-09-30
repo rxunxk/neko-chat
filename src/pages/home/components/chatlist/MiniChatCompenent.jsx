@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Avatar,
   Dropdown,
@@ -7,12 +8,13 @@ import {
   DropdownItem,
   useDisclosure,
 } from "@nextui-org/react";
+import { ArrowLeft } from "lucide-react";
 import { useSelector } from "react-redux";
 import { MoreHorizontal } from "lucide-react";
 import ProfileModal from "../../../../modals/ProfileModal";
 import GroupInfo from "../../../../modals/GroupInfo";
 
-const MiniChatCompenent = () => {
+const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   const curChat = useSelector((state) => state.curChat);
   const { isOpen: isProfileModelOpen, onOpenChange: setIsProfileModel } =
     useDisclosure();
@@ -20,9 +22,13 @@ const MiniChatCompenent = () => {
     useDisclosure();
 
   return (
-    <>
+    <div
+      className={`bg-[#333] h-full shrink-0 flex-1 max-[700px]:w-full max-[700px]:${
+        hideChat ? "hidden" : ""
+      } `}
+    >
       {Object.keys(curChat).length ? (
-        <div className="bg-[#333] h-full w-full max-[700px]:hidden">
+        <div>
           {curChat?.isGroupChat ? (
             <GroupInfo
               groupChat={curChat}
@@ -38,6 +44,13 @@ const MiniChatCompenent = () => {
           )}
           <div className="bg-[#1d1c1c] w-full h-[65px] p-2 px-2 flex gap-2 items-center justify-between">
             <div className="flex gap-2 items-center">
+              <ArrowLeft
+                className="h-[30px] w-[30px] mr-2 hidden max-[700px]:flex cursor-pointer"
+                onClick={() => {
+                  setHideChat(true);
+                }}
+              />
+
               <Avatar
                 className="h-[45px] w-[45px]"
                 src={
@@ -83,7 +96,7 @@ const MiniChatCompenent = () => {
       ) : (
         "Click on of the chats on the left to open a chat"
       )}
-    </>
+    </div>
   );
 };
 
