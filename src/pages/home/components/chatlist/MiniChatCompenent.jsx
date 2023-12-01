@@ -49,7 +49,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
     }
   };
 
-  useEffect(() => {
+  const setUpSocket = () => {
     socket = io(ENDPOINT);
     socket.emit("setup", currUser);
     socket.on("connection", () => setSocketConnected(true));
@@ -64,6 +64,10 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
         setMessageList((prevState) => [...prevState, newMsgReceived]);
       }
     });
+  };
+
+  useEffect(() => {
+    setUpSocket();
   }, []);
 
   useEffect(() => {
