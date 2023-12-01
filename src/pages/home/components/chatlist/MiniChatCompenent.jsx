@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { MoreHorizontal } from "lucide-react";
 import ProfileModal from "../../../../modals/ProfileModal";
 import GroupInfo from "../../../../modals/GroupInfo";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCurrentUser } from "../../../../util/utilFunctions";
 import { getAllMessages, sendMessage } from "../../../../util/messageApi";
 import ScrollableFeed from "react-scrollable-feed";
@@ -33,6 +33,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
+  const containerRef = useRef(null);
   const currUser = getCurrentUser();
 
   const callGetAllMessages = () => {
@@ -52,15 +53,8 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
     socket = io(ENDPOINT);
     socket.emit("setup", currUser);
     socket.on("connection", () => setSocketConnected(true));
-  }, []);
-
-  useEffect(() => {
-    callGetAllMessages();
-    selectedChatCompare = curChat;
-  }, [curChat]);
-
-  useEffect(() => {
     socket.on("message received", (newMsgReceived) => {
+      console.log("hi from received use effect");
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMsgReceived.chat._id
@@ -70,7 +64,16 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
         setMessageList((prevState) => [...prevState, newMsgReceived]);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
   });
+
+  useEffect(() => {
+    callGetAllMessages();
+    selectedChatCompare = curChat;
+  }, [curChat]);
 
   const sendMessageHandler = () => {
     //Empty the message input
@@ -94,6 +97,17 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
         console.log(err.message);
       });
     //Remove the appended message if response failed
+  };
+
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      // Scroll to the bottom of the container
+      containerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
   };
 
   return (
@@ -178,7 +192,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
               </DropdownMenu>
             </Dropdown>
           </div>
-          <div className="flex-grow overflow-auto">
+          <div className="flex-grow overflow-auto" ref={containerRef}>
             {Object.keys(messageList).length ? (
               <ScrollableFeed className="p-2">
                 {messageList?.map((message, i) => {
