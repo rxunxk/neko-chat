@@ -19,6 +19,10 @@ import { getCurrentUser } from "../../../../util/utilFunctions";
 import { getAllMessages, sendMessage } from "../../../../util/messageApi";
 import ScrollableFeed from "react-scrollable-feed";
 import MessageBar from "../message bar/messageBar";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:2000";
+let socket, selectedChatCompare;
 
 const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   const curChat = useSelector((state) => state.curChat);
@@ -28,12 +32,15 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
     useDisclosure();
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const currUser = getCurrentUser();
 
   const callGetAllMessages = () => {
     if (Object.keys(curChat).length) {
       getAllMessages(curChat?._id)
         .then((res) => {
           setMessageList(res.data);
+          socket.emit("join chat", curChat._id);
         })
         .catch((err) => {
           console.log(err.message);
@@ -42,8 +49,28 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   };
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", currUser);
+    socket.on("connection", () => setSocketConnected(true));
+  }, []);
+
+  useEffect(() => {
     callGetAllMessages();
+    selectedChatCompare = curChat;
   }, [curChat]);
+
+  useEffect(() => {
+    socket.on("message received", (newMsgReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMsgReceived.chat._id
+      ) {
+        //send notification
+      } else {
+        setMessageList((prevState) => [...prevState, newMsgReceived]);
+      }
+    });
+  });
 
   const sendMessageHandler = () => {
     //Empty the message input
@@ -58,6 +85,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
       chatId: curChat._id,
     })
       .then((res) => {
+        socket.emit("new message", res.data);
         setMessageList((prevState) => [...prevState, res.data]);
         console.log(res.data);
       })
@@ -66,8 +94,6 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
         console.log(err.message);
       });
     //Remove the appended message if response failed
-
-    console.log(message);
   };
 
   return (
