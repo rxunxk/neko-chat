@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux/stores/store.js";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <>
     <Provider store={store}>
       <NextUIProvider>
         <main className={`${DARK}`}>
@@ -19,5 +19,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </main>
       </NextUIProvider>
     </Provider>
-  </React.StrictMode>
+  </>
 );

@@ -32,7 +32,6 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
     useDisclosure();
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
-  const [socketConnected, setSocketConnected] = useState(false);
   const containerRef = useRef(null);
   const currUser = getCurrentUser();
 
@@ -52,7 +51,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   const setUpSocket = () => {
     socket = io(ENDPOINT);
     socket.emit("setup", currUser);
-    socket.on("connection", () => setSocketConnected(true));
+    socket.on("connection", () => {});
     socket.on("message received", (newMsgReceived) => {
       console.log("hi from received use effect");
       if (
@@ -94,7 +93,6 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
       .then((res) => {
         socket.emit("new message", res.data);
         setMessageList((prevState) => [...prevState, res.data]);
-        console.log(res.data);
       })
       .catch((err) => {
         setMessage(temp);
@@ -196,9 +194,9 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
               </DropdownMenu>
             </Dropdown>
           </div>
-          <div className="flex-grow overflow-auto" ref={containerRef}>
+          <div className="flex-grow overflow-auto">
             {Object.keys(messageList).length ? (
-              <ScrollableFeed className="p-2">
+              <div className="p-2" ref={containerRef}>
                 {messageList?.map((message, i) => {
                   return (
                     <MessageBar
@@ -209,7 +207,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
                     />
                   );
                 })}
-              </ScrollableFeed>
+              </div>
             ) : (
               <h1>No Chats to display</h1>
             )}
