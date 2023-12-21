@@ -17,7 +17,7 @@ import GroupInfo from "../../../../modals/GroupInfo";
 import { useEffect, useRef, useState } from "react";
 import { getCurrentUser } from "../../../../util/utilFunctions";
 import { getAllMessages, sendMessage } from "../../../../util/messageApi";
-import MessageBar from "../messageBar/messageBar";
+import MessageBar from "../messageBar/MessageBar";
 import io from "socket.io-client";
 import { BASE_URL } from "../../../../config/axios";
 
