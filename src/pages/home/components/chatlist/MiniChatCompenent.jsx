@@ -17,11 +17,10 @@ import GroupInfo from "../../../../modals/GroupInfo";
 import { useEffect, useRef, useState } from "react";
 import { getCurrentUser } from "../../../../util/utilFunctions";
 import { getAllMessages, sendMessage } from "../../../../util/messageApi";
-import ScrollableFeed from "react-scrollable-feed";
 import MessageBar from "../message bar/messageBar";
 import io from "socket.io-client";
+import { BASE_URL } from "../../../../config/axios";
 
-const ENDPOINT = "http://localhost:2000";
 let socket, selectedChatCompare;
 
 const MiniChatCompenent = ({ hideChat, setHideChat }) => {
@@ -49,7 +48,7 @@ const MiniChatCompenent = ({ hideChat, setHideChat }) => {
   };
 
   const setUpSocket = () => {
-    socket = io(ENDPOINT);
+    socket = io(BASE_URL);
     socket.emit("setup", currUser);
     socket.on("connection", () => {});
     socket.on("message received", (newMsgReceived) => {
